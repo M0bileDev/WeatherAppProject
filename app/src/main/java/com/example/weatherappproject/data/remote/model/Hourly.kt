@@ -1,21 +1,21 @@
-package com.example.data.remote.model
+package com.example.weatherappproject.data.remote.model
 
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class HourlyUnits(
+data class Hourly(
     @param:Json(name = "pressure_msl")
-    val pressureMsl: String,
+    val pressureMsl: List<Double>,
     @param:Json(name = "relativehumidity_2m")
-    val relativeHumidity2m: String,
+    val relativeHumidity2m: List<Int>,
     @param:Json(name = "temperature_2m")
-    val temperature2m: String,
+    val temperature2m: List<Double>,
     @param:Json(name = "time")
-    val time: String,
+    val time: List<String>,
     @param:Json(name = "weathercode")
-    val weatherCode: String,
+    val weatherCode: List<Int>,
     @param:Json(name = "windspeed_10m")
-    val windSpeed10m: String
+    val windSpeed10m: List<Double>
 )
