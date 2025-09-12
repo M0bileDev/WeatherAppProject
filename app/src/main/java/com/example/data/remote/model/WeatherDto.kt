@@ -1,10 +1,8 @@
-package com.example.data.remote
+package com.example.data.remote.model
 
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.jetbrains.annotations.NotNull
-import retrofit2.http.Field
 
 
 @JsonClass(generateAdapter = true)

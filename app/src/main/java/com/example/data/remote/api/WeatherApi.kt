@@ -1,5 +1,6 @@
-package com.example.data.remote
+package com.example.data.remote.api
 
+import com.example.data.remote.model.WeatherDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,4 +13,3 @@ interface WeatherApi {
     ): WeatherDto
 
 }
-
