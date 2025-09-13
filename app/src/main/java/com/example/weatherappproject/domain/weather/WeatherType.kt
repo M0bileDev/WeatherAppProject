@@ -1,11 +1,13 @@
 package com.example.weatherappproject.domain.weather
 
+import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import com.example.weatherappproject.R
 
+
 sealed class WeatherType(
     val weatherDesc: String,
-    @DrawableRes val iconRes: Int
+    @param:DrawableRes val iconRes: Int
 ) {
     object ClearSky : WeatherType(
         weatherDesc = "Clear sky",
