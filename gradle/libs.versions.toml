@@ -13,7 +13,7 @@ ksp = "2.2.20-2.0.3"
 daggerHiltNavigationCompose = "1.3.0"
 playServicesLocation = "21.3.0"
 retrofit = "3.0.0"
-moshi = "1.15.2"
+converterMoshi = "3.0.0"
 loggingInterceptor = "5.1.0"
 
 [libraries]
@@ -36,7 +36,7 @@ android-dagger-hilt-compailer = { group ="com.google.dagger", name ="hilt-androi
 android-dagger-hilt-navigation-compose = { group="androidx.hilt", name="hilt-navigation-compose", version.ref = "daggerHiltNavigationCompose"}
 play-services-location = { group = "com.google.android.gms", name="play-services-location", version.ref = "playServicesLocation"}
 retrofit  = { group ="com.squareup.retrofit2", name ="retrofit", version.ref = "retrofit"}
-converter-moshi = { group ="com.squareup.moshi", name ="moshi", version.ref = "moshi"}
+converter-moshi = { group ="com.squareup.retrofit2", name ="converter-moshi", version.ref = "converterMoshi"}
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor"}
 
 [plugins]
