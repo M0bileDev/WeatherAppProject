@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
     private val weatherApi: WeatherApi
-) : WeatherRepository {
+) : DefaultWeatherRepository {
     override suspend fun getWeather(
         lat: Double,
         long: Double
