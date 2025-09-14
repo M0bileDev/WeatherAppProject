@@ -2,9 +2,8 @@ package com.example.weatherappproject.data.repository
 
 import com.example.weatherappproject.data.mappers.toWeatherInfo
 import com.example.weatherappproject.data.remote.api.WeatherApi
-import com.example.weatherappproject.domain.repository.WeatherRepository
-import com.example.weatherappproject.domain.util.Resource
-import com.example.weatherappproject.domain.weather.WeatherInfo
+import com.example.weatherappproject.domain.model.utils.Resource
+import com.example.weatherappproject.domain.model.weather.WeatherInfo
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
@@ -22,5 +21,4 @@ class WeatherRepositoryImpl @Inject constructor(
             Resource.Error(e.localizedMessage ?: "An unknown error occurred")
         }
     }
-
 }
