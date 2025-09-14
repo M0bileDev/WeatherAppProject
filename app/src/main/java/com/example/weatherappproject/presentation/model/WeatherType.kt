@@ -1,9 +1,7 @@
-package com.example.weatherappproject.domain.weather
+package com.example.weatherappproject.presentation.model
 
-import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import com.example.weatherappproject.R
-
 
 sealed class WeatherType(
     val weatherDesc: String,
