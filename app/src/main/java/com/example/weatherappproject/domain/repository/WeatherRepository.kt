@@ -1,6 +1,6 @@
 package com.example.weatherappproject.domain.repository
 
-import com.example.weatherappproject.domain.model.utils.Resource
+import com.example.weatherappproject.utils.Resource
 import com.example.weatherappproject.domain.model.weather.WeatherInfo
 
 interface WeatherRepository {

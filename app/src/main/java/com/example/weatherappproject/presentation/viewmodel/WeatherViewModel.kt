@@ -6,7 +6,7 @@ import com.example.weatherappproject.data.location.DefaultLocationTracker
 import com.example.weatherappproject.data.location.LocationData
 import com.example.weatherappproject.data.model.weather.WeatherInfo
 import com.example.weatherappproject.data.repository.DefaultWeatherRepository
-import com.example.weatherappproject.domain.model.utils.Resource
+import com.example.weatherappproject.utils.Resource
 import com.example.weatherappproject.presentation.mapper.toWeatherDataPresentation
 import com.example.weatherappproject.presentation.model.WeatherState
 import com.example.weatherappproject.presentation.model.WeatherViewModelAction
