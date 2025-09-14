@@ -1,12 +1,12 @@
-package com.example.weatherappproject.domain.weather
+package com.example.weatherappproject.domain.model.weather
 
 import java.time.LocalDateTime
 
-data class WeatherData(
+abstract class WeatherData(
     val time: LocalDateTime,
     val temperatureCelsius: Double,
     val pressure: Double,
     val windSpeed: Double,
     val humidity: Int,
-    val weatherType: WeatherType
+    val weatherCode: Int
 )
