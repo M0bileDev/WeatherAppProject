@@ -1,11 +1,10 @@
 package com.example.weatherappproject.data.mappers
 
 import com.example.weatherappproject.data.mappers.model.IndexedWeatherData
+import com.example.weatherappproject.data.model.weather.WeatherData
+import com.example.weatherappproject.data.model.weather.WeatherInfo
 import com.example.weatherappproject.data.remote.model.Hourly
 import com.example.weatherappproject.data.remote.model.WeatherDto
-import com.example.weatherappproject.domain.weather.WeatherData
-import com.example.weatherappproject.domain.weather.WeatherInfo
-import com.example.weatherappproject.domain.weather.WeatherType
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter.ISO_DATE_TIME
 
@@ -20,12 +19,12 @@ fun Hourly.toWeatherDataMap(): Map<Int, List<WeatherData>> {
         val humidity = relativeHumidity2m[index]
 
         val weatherData = WeatherData(
-            time = LocalDateTime.parse(string, ISO_DATE_TIME),
-            temperatureCelsius = temperature,
-            pressure = pressure,
-            windSpeed = windSpeed,
-            humidity = humidity,
-            weatherType = WeatherType.fromWMO(weatherCode)
+            timeData = LocalDateTime.parse(string, ISO_DATE_TIME),
+            temperatureCelsiusData = temperature,
+            pressureData = pressure,
+            windSpeedData = windSpeed,
+            humidityData = humidity,
+            weatherCodeData = weatherCode
         )
         //Indexed from 0 to 167 as hour from 0 to 23, for next days (max 7 days ahead)
         IndexedWeatherData(index, weatherData = weatherData)
@@ -49,7 +48,7 @@ fun WeatherDto.toWeatherInfo(): WeatherInfo {
         weatherData.time.hour == now.hour
     }
     return WeatherInfo(
-        weatherDataPerDay = weatherDataMap,
+        weatherDataPerDayData = weatherDataMap,
         currentWeatherData = currentWeatherData
     )
 }
