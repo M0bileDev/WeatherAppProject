@@ -55,7 +55,7 @@ class WeatherViewModel @Inject constructor(
                         _state.value = _state.value.copy(
                             isLoading = false,
                         )
-                        _actions.emit(WeatherViewModelAction.ApiError)
+                        _actions.emit(WeatherViewModelAction.ApiError(result.message))
                     }
                 }
             } ?: run {
