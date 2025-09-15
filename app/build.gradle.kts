@@ -71,7 +71,9 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
+    implementation(libs.moshi)
     implementation(libs.logging.interceptor)
+    implementation(libs.moshi.kotlin)
 
     testImplementation(libs.junit)
 
