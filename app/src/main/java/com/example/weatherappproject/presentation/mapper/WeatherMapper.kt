@@ -17,7 +17,7 @@ fun WeatherInfo.toWeatherDataPresentation(): WeatherInfoPresentation {
                 weatherData.humidityData,
                 fromWMO(weatherData.weatherCodeData)
             )
-        }
+        }.sortedBy { timeSort -> timeSort.timeData.hour }
     }
 
     val weatherData = currentWeatherData?.let {
