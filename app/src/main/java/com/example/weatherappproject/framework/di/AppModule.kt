@@ -5,6 +5,8 @@ import com.example.weatherappproject.BuildConfig
 import com.example.weatherappproject.data.remote.api.WeatherApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,7 +34,12 @@ object AppModule {
 
 
     @[Provides Singleton]
-    fun provideMoshiConverter(): MoshiConverterFactory = MoshiConverterFactory.create()
+    fun provideMoshiConverter(
+        moshi: Moshi
+    ): MoshiConverterFactory = MoshiConverterFactory.create(moshi)
+
+    @[Provides Singleton]
+    fun provideMoshi(): Moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
 
     @[Provides Singleton]
     fun provideFusedLocationProviderClient(
