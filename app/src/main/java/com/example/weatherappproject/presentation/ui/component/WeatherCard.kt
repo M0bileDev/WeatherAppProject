@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -20,17 +21,16 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherappproject.R
-import com.example.weatherappproject.presentation.model.WeatherState
-import java.time.format.DateTimeFormatter
+import com.example.weatherappproject.presentation.model.WeatherDataPresentation
+import com.example.weatherappproject.presentation.ui.dateFormatterHHmm
 
-const val TIME_PATTERN = "HH:mm"
 
 @Composable
 fun WeatherCard(
     modifier: Modifier = Modifier,
-    state: WeatherState,
+    currentWeatherData: WeatherDataPresentation?
 ) {
-    state.weatherInfo?.currentWeatherData?.let { dataPresentation ->
+    currentWeatherData?.let { dataPresentation ->
         Card(
             modifier = modifier.padding(16.dp),
             shape = RoundedCornerShape(16.dp)
@@ -42,15 +42,16 @@ fun WeatherCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                val currentTime = dataPresentation.timeData.format(
-                    DateTimeFormatter.ofPattern(TIME_PATTERN)
-                )
-                currentTime?.let {
-                    Text(
-                        modifier = Modifier.align(Alignment.End),
-                        text = "Today $it"
+                val currentTime = remember(dataPresentation.timeData) {
+                    dataPresentation.timeData.format(
+                        dateFormatterHHmm
                     )
-                }
+                } ?: "No data"
+
+                Text(
+                    modifier = Modifier.align(Alignment.End),
+                    text = "Today $currentTime"
+                )
                 Spacer(modifier = Modifier.height(16.dp))
                 Image(
                     painter = painterResource(dataPresentation.weatherType.iconRes),
