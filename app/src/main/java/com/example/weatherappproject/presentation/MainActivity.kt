@@ -9,13 +9,17 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.weatherappproject.presentation.ui.component.WeatherCard
+import com.example.weatherappproject.presentation.ui.component.WeatherForecast
 import com.example.weatherappproject.presentation.ui.theme.WeatherAppProjectTheme
 import com.example.weatherappproject.presentation.viewmodel.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,9 +57,18 @@ class MainActivity : ComponentActivity() {
                     Column(
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        WeatherCard(
-                            state = state
-                        )
+                        state.weatherInfo?.let { presentation ->
+                            WeatherCard(
+                                currentWeatherData = presentation.currentWeatherData
+                            )
+                            Spacer(Modifier.height(16.dp))
+                            WeatherForecast(
+                                weatherDataForToday = presentation.weatherDataPerDayData.getOrElse(
+                                    0,
+                                    defaultValue = { throw IllegalStateException() })
+                            )
+                        }
+
                     }
                 }
             }
