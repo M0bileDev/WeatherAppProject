@@ -60,7 +60,7 @@ class WeatherViewModel @Inject constructor(
                 }
             } ?: run {
                 _state.value = _state.value.copy(
-                    isLoading = true
+                    isLoading = false
                 )
                 _actions.emit(WeatherViewModelAction.NoLocationData)
             }
