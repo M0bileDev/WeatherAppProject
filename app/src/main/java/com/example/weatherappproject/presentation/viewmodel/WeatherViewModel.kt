@@ -1,6 +1,7 @@
 package com.example.weatherappproject.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.weatherappproject.data.location.DefaultLocationTracker
 import com.example.weatherappproject.data.location.LocationData
 import com.example.weatherappproject.data.model.weather.WeatherInfo
@@ -28,7 +29,7 @@ class WeatherViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var job: Job? = null
-    val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     private val _actions = MutableSharedFlow<WeatherViewModelAction>()
     val actions = _actions.asSharedFlow()
@@ -63,7 +64,7 @@ class WeatherViewModel @Inject constructor(
                                 weatherInfo = null,
                                 isLoading = false,
                             )
-                            _actions.emit(WeatherViewModelAction.ApiError(result.message))
+                            _actions.emit(WeatherViewModelAction.ApiError())
                         }
                     }
                 } ?: run {
@@ -74,6 +75,12 @@ class WeatherViewModel @Inject constructor(
                     _actions.emit(WeatherViewModelAction.NoLocationData)
                 }
             }
+        }
+    }
+
+    fun onLocationPermissionError() = with(viewModelScope) {
+        launch {
+            _actions.emit(WeatherViewModelAction.NoLocationData)
         }
     }
 
