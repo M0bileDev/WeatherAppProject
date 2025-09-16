@@ -1,8 +1,13 @@
 package com.example.weatherappproject.presentation
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
@@ -20,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,18 +54,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) {
-            viewModel.loadWeatherInfo()
-        }.also { launcher ->
-            launcher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                )
-            )
-        }
+        permissionLauncher = configPermissionLauncher(
+            onSuccess = {
+                viewModel.loadWeatherInfo()
+            },
+            onError = {
+                viewModel.onLocationPermissionError()
+            }
+        )
+        permissionLauncher.runLocationsPermissions()
+
 
         enableEdgeToEdge()
         setContent {
@@ -67,6 +71,8 @@ class MainActivity : ComponentActivity() {
 
                 val state by viewModel.state.collectAsStateWithLifecycle()
                 val lifecycle = LocalLifecycleOwner.current
+                val activity =
+                    LocalActivity.current ?: throw IllegalStateException("Activity was null!")
                 val snackbarHostState = remember { SnackbarHostState() }
 
                 LaunchedEffect(Unit) {
@@ -76,7 +82,7 @@ class MainActivity : ComponentActivity() {
                                 is WeatherViewModelAction.ApiError -> {
                                     snackbarHostState.currentSnackbarData?.dismiss()
                                     snackbarHostState.showSnackbar(
-                                        action.message ?: "An request error occurred",
+                                        "A request error occurred. Please check Internet connection",
                                         withDismissAction = true,
                                         duration = SnackbarDuration.Indefinite
                                     )
@@ -86,9 +92,17 @@ class MainActivity : ComponentActivity() {
                                     snackbarHostState.currentSnackbarData?.dismiss()
                                     snackbarHostState.showSnackbar(
                                         "A location error occurred. Please check permissions.",
-                                        withDismissAction = true,
-                                        duration = SnackbarDuration.Indefinite
-                                    )
+                                        duration = SnackbarDuration.Indefinite,
+                                        actionLabel = "SETTINGS",
+                                        withDismissAction = true
+                                    ).run {
+                                        when (this) {
+                                            SnackbarResult.Dismissed -> {}
+                                            SnackbarResult.ActionPerformed -> {
+                                                startApplicationSettings(activity)
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -111,12 +125,7 @@ class MainActivity : ComponentActivity() {
                                     Column {
                                         Text("There's no data to display. Try again later.")
                                         Button(onClick = {
-                                            permissionLauncher.launch(
-                                                arrayOf(
-                                                    Manifest.permission.ACCESS_FINE_LOCATION,
-                                                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                                                )
-                                            )
+                                            permissionLauncher.runLocationsPermissions()
                                         }) {
                                             Text("Refresh")
                                         }
@@ -131,7 +140,7 @@ class MainActivity : ComponentActivity() {
                                     WeatherForecast(
                                         weatherDataForToday = presentation.weatherDataPerDayData.getOrElse(
                                             0,
-                                            defaultValue = { throw IllegalStateException() })
+                                            defaultValue = { throw IllegalStateException("Map was empty!") })
                                     )
                                 }
                             }
@@ -147,5 +156,39 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    fun ActivityResultLauncher<Array<String>>.runLocationsPermissions() = launch(
+        arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+        )
+    )
+
+    private fun configPermissionLauncher(
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ): ActivityResultLauncher<Array<String>> = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val permissionsGranted = permissions.all { it.value }
+        if (permissionsGranted) {
+            onSuccess()
+        } else {
+            onError()
+        }
+    }
+}
+
+private fun startApplicationSettings(
+    activity: Activity
+) = with(activity) {
+    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+        val uri = Uri.fromParts(
+            "package",
+            packageName, null
+        )
+        setData(uri)
+        startActivity(this)
     }
 }
