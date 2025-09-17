@@ -19,12 +19,12 @@ fun Hourly.toWeatherDataMap(): Map<Int, List<WeatherData>> {
         val humidity = relativeHumidity2m[index]
 
         val weatherData = WeatherData(
-            timeData = LocalDateTime.parse(string, ISO_DATE_TIME),
-            temperatureCelsiusData = temperature,
-            pressureData = pressure,
-            windSpeedData = windSpeed,
-            humidityData = humidity,
-            weatherCodeData = weatherCode
+            time = LocalDateTime.parse(string, ISO_DATE_TIME),
+            temperatureCelsius = temperature,
+            pressure = pressure,
+            windSpeed = windSpeed,
+            humidity = humidity,
+            weatherCode = weatherCode
         )
         //Indexed from 0 to 167 as hour from 0 to 23, for next days (max 7 days ahead)
         IndexedWeatherData(index, weatherData = weatherData)
@@ -48,8 +48,8 @@ fun WeatherDto.toWeatherInfo(): WeatherInfo {
         weatherData.time.hour == now.hour
     }
     return WeatherInfo(
-        weatherDataPerDayData = weatherDataMap,
-        currentWeatherData = currentWeatherData
+        weatherDataPerDay = weatherDataMap,
+        currentWeather = currentWeatherData
     )
 }
 

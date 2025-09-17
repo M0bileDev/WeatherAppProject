@@ -4,17 +4,17 @@ import com.example.weatherappproject.domain.model.weather.WeatherData
 import java.time.LocalDateTime
 
 data class WeatherData(
-    val timeData: LocalDateTime,
-    val temperatureCelsiusData: Double,
-    val pressureData: Double,
-    val windSpeedData: Double,
-    val humidityData: Int,
-    val weatherCodeData: Int
+    override val time: LocalDateTime,
+    override val temperatureCelsius: Double,
+    override val pressure: Double,
+    override val windSpeed: Double,
+    override val humidity: Int,
+    override val weatherCode: Int
 ) : WeatherData(
-    timeData,
-    temperatureCelsiusData,
-    pressureData,
-    windSpeedData,
-    humidityData,
-    weatherCodeData
+    time,
+    temperatureCelsius,
+    pressure,
+    windSpeed,
+    humidity,
+    weatherCode
 )

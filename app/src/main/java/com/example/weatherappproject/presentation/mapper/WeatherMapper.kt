@@ -7,27 +7,27 @@ import com.example.weatherappproject.presentation.model.WeatherType.Companion.fr
 
 fun WeatherInfo.toWeatherDataPresentation(): WeatherInfoPresentation {
 
-    val weatherDataPerDay = weatherDataPerDayData.mapValues {
+    val weatherDataPerDay = weatherDataPerDay.mapValues {
         it.value.map { weatherData ->
             WeatherDataPresentation(
-                weatherData.timeData,
-                weatherData.temperatureCelsiusData,
-                weatherData.pressureData,
-                weatherData.windSpeedData,
-                weatherData.humidityData,
-                fromWMO(weatherData.weatherCodeData)
+                weatherData.time,
+                weatherData.temperatureCelsius,
+                weatherData.pressure,
+                weatherData.windSpeed,
+                weatherData.humidity,
+                fromWMO(weatherData.weatherCode)
             )
         }.sortedBy { timeSort -> timeSort.timeData.hour }
     }
 
-    val weatherData = currentWeatherData?.let {
+    val weatherData = currentWeather?.let {
         WeatherDataPresentation(
-            it.timeData,
-            it.temperatureCelsiusData,
-            it.pressureData,
-            it.windSpeedData,
-            it.humidityData,
-            fromWMO(it.weatherCodeData)
+            it.time,
+            it.temperatureCelsius,
+            it.pressure,
+            it.windSpeed,
+            it.humidity,
+            fromWMO(it.weatherCode)
         )
     }
 

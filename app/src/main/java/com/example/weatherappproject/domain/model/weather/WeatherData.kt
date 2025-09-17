@@ -3,10 +3,10 @@ package com.example.weatherappproject.domain.model.weather
 import java.time.LocalDateTime
 
 abstract class WeatherData(
-    val time: LocalDateTime,
-    val temperatureCelsius: Double,
-    val pressure: Double,
-    val windSpeed: Double,
-    val humidity: Int,
-    val weatherCode: Int
+    open val time: LocalDateTime,
+    open val temperatureCelsius: Double,
+    open val pressure: Double,
+    open val windSpeed: Double,
+    open val humidity: Int,
+    open val weatherCode: Int
 )
