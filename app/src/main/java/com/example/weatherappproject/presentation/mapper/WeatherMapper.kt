@@ -7,7 +7,7 @@ import com.example.weatherappproject.presentation.model.WeatherType.Companion.fr
 
 fun WeatherInfoData.toWeatherDataPresentation(): WeatherInfoPresentation {
 
-    val weatherDataPerDay = weatherDomainPerDay.mapValues {
+    val weatherDataPerDay = weatherPerDay.mapValues {
         it.value.map { weatherData ->
             WeatherDataPresentation(
                 weatherData.time,

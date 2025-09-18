@@ -48,7 +48,7 @@ fun WeatherDto.toWeatherInfo(): WeatherInfoData {
         weatherData.time.hour == now.hour
     }
     return WeatherInfoData(
-        weatherDomainPerDay = weatherDataMap,
+        weatherPerDay = weatherDataMap,
         currentWeather = currentWeatherData
     )
 }
