@@ -2,6 +2,8 @@ package com.example.weatherappproject.framework.di
 
 import com.example.weatherappproject.data.mappers.WeatherMapper
 import com.example.weatherappproject.data.mappers.WeatherMapperImpl
+import com.example.weatherappproject.presentation.mapper.WeatherMapperPresentation
+import com.example.weatherappproject.presentation.mapper.WeatherMapperPresentationImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,4 +15,7 @@ abstract class MapperModule {
 
     @[Binds Singleton]
     abstract fun bindWeatherMapper(weatherMapperImpl: WeatherMapperImpl): WeatherMapper
+
+    @[Binds Singleton]
+    abstract fun bindWeatherMapperPresentation(weatherMapperPresentationImpl: WeatherMapperPresentationImpl): WeatherMapperPresentation
 }
