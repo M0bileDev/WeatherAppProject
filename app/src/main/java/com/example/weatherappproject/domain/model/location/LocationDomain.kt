@@ -1,6 +1,6 @@
 package com.example.weatherappproject.domain.model.location
 
-abstract class LocationData(
+abstract class LocationDomain(
     open val latitude: Double,
     open val longitude: Double
 )
