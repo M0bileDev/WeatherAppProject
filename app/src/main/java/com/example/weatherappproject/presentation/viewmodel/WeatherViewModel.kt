@@ -3,11 +3,9 @@ package com.example.weatherappproject.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherappproject.data.location.DefaultLocationTracker
-import com.example.weatherappproject.data.location.LocationData
-import com.example.weatherappproject.data.model.weather.WeatherInfoData
 import com.example.weatherappproject.data.repository.DefaultWeatherRepository
+import com.example.weatherappproject.presentation.mapper.WeatherMapperPresentation
 import com.example.weatherappproject.utils.Resource
-import com.example.weatherappproject.presentation.mapper.toWeatherDataPresentation
 import com.example.weatherappproject.presentation.model.WeatherState
 import com.example.weatherappproject.presentation.model.WeatherViewModelAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val weatherRepository: DefaultWeatherRepository,
-    private val locationTracker: DefaultLocationTracker
+    private val locationTracker: DefaultLocationTracker,
+    private val weatherMapperPresentation: WeatherMapperPresentation
 ) : ViewModel() {
 
     private var job: Job? = null
@@ -49,12 +48,20 @@ class WeatherViewModel @Inject constructor(
                 )
 
                 locationTracker.getCurrentLocation()?.let { locationData ->
-                    val (latitude, longitude) = locationData as LocationData
+                    val (latitude, longitude) = locationData
                     val result = weatherRepository.getWeather(latitude, longitude)
+
                     when (result) {
                         is Resource.Success -> {
+
+                            val data = result.data
+                                ?: throw IllegalStateException("Success data cannot be null")
+                            val weatherInfo = with(weatherMapperPresentation) {
+                                data.toWeatherDataPresentation()
+                            }
+
                             _state.value = _state.value.copy(
-                                weatherInfo = (result.data as WeatherInfoData).toWeatherDataPresentation(),
+                                weatherInfo = weatherInfo,
                                 isLoading = false
                             )
                         }
