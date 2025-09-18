@@ -1,6 +1,6 @@
 package com.example.weatherappproject.data.model.weather
 
-import com.example.weatherappproject.domain.model.weather.WeatherData
+import com.example.weatherappproject.domain.model.weather.WeatherDomain
 import java.time.LocalDateTime
 
 data class WeatherData(
@@ -10,7 +10,7 @@ data class WeatherData(
     override val windSpeed: Double,
     override val humidity: Int,
     override val weatherCode: Int
-) : WeatherData(
+) : WeatherDomain(
     time,
     temperatureCelsius,
     pressure,
