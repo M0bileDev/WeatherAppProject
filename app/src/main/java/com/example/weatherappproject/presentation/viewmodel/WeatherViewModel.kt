@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherappproject.data.location.DefaultLocationTracker
 import com.example.weatherappproject.data.location.LocationData
-import com.example.weatherappproject.data.model.weather.WeatherInfo
+import com.example.weatherappproject.data.model.weather.WeatherInfoData
 import com.example.weatherappproject.data.repository.DefaultWeatherRepository
 import com.example.weatherappproject.utils.Resource
 import com.example.weatherappproject.presentation.mapper.toWeatherDataPresentation
@@ -54,7 +54,7 @@ class WeatherViewModel @Inject constructor(
                     when (result) {
                         is Resource.Success -> {
                             _state.value = _state.value.copy(
-                                weatherInfo = (result.data as WeatherInfo).toWeatherDataPresentation(),
+                                weatherInfo = (result.data as WeatherInfoData).toWeatherDataPresentation(),
                                 isLoading = false
                             )
                         }

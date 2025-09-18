@@ -1,11 +1,11 @@
 package com.example.weatherappproject.presentation.mapper
 
-import com.example.weatherappproject.data.model.weather.WeatherInfo
+import com.example.weatherappproject.data.model.weather.WeatherInfoData
 import com.example.weatherappproject.presentation.model.WeatherDataPresentation
 import com.example.weatherappproject.presentation.model.WeatherInfoPresentation
 import com.example.weatherappproject.presentation.model.WeatherType.Companion.fromWMO
 
-fun WeatherInfo.toWeatherDataPresentation(): WeatherInfoPresentation {
+fun WeatherInfoData.toWeatherDataPresentation(): WeatherInfoPresentation {
 
     val weatherDataPerDay = weatherDomainPerDay.mapValues {
         it.value.map { weatherData ->

@@ -2,7 +2,7 @@ package com.example.weatherappproject.data.mappers
 
 import com.example.weatherappproject.data.mappers.model.IndexedWeatherData
 import com.example.weatherappproject.data.model.weather.WeatherData
-import com.example.weatherappproject.data.model.weather.WeatherInfo
+import com.example.weatherappproject.data.model.weather.WeatherInfoData
 import com.example.weatherappproject.data.remote.model.Hourly
 import com.example.weatherappproject.data.remote.model.WeatherDto
 import java.time.LocalDateTime
@@ -41,13 +41,13 @@ fun Hourly.toWeatherDataMap(): Map<Int, List<WeatherData>> {
 
 }
 
-fun WeatherDto.toWeatherInfo(): WeatherInfo {
+fun WeatherDto.toWeatherInfo(): WeatherInfoData {
     val weatherDataMap = hourly.toWeatherDataMap()
     val now = LocalDateTime.now()
     val currentWeatherData = weatherDataMap[0]?.find { weatherData ->
         weatherData.time.hour == now.hour
     }
-    return WeatherInfo(
+    return WeatherInfoData(
         weatherDomainPerDay = weatherDataMap,
         currentWeather = currentWeatherData
     )
