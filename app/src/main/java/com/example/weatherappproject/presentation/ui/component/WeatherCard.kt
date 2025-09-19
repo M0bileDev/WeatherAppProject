@@ -50,7 +50,7 @@ fun WeatherCard(
 
                 Text(
                     modifier = Modifier.align(Alignment.End),
-                    text = stringResource(R.string.today, currentTime)
+                    text = stringResource(R.string.today_x, currentTime)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Image(
@@ -60,7 +60,7 @@ fun WeatherCard(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(stringResource(R.string.temperature_x_celsius,presentation.temperatureCelsiusData), fontSize = 50.sp)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(presentation.weatherType.weatherDesc, fontSize = 20.sp)
+                Text(stringResource(presentation.weatherType.weatherDesc), fontSize = 20.sp)
                 Spacer(modifier = Modifier.height(32.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
