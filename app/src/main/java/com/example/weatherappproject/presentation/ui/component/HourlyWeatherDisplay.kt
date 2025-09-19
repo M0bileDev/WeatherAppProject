@@ -11,31 +11,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.weatherappproject.presentation.model.WeatherDataPresentation
+import com.example.weatherappproject.presentation.model.WeatherPresentation
 import com.example.weatherappproject.presentation.ui.dateFormatterHHmm
 
 @Composable
 fun HourlyWeatherDisplay(
     modifier: Modifier = Modifier,
-    weatherDataPresentation: WeatherDataPresentation
+    weatherPresentation: WeatherPresentation
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        val time = remember(weatherDataPresentation.timeData) {
-            weatherDataPresentation.timeData.format(
+        val time = remember(weatherPresentation.timeData) {
+            weatherPresentation.timeData.format(
                 dateFormatterHHmm
             )
         } ?: "No data"
         Text(text = time)
         Image(
             modifier = Modifier.size(40.dp),
-            painter = painterResource(weatherDataPresentation.weatherType.iconRes),
-            contentDescription = weatherDataPresentation.weatherType.weatherDesc,
+            painter = painterResource(weatherPresentation.weatherType.iconRes),
+            contentDescription = weatherPresentation.weatherType.weatherDesc,
         )
-        Text(text = "${weatherDataPresentation.temperatureCelsiusData}°C")
+        Text(text = "${weatherPresentation.temperatureCelsiusData}°C")
     }
 
 }

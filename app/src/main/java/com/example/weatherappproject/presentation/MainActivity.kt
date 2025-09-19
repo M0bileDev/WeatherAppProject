@@ -134,11 +134,11 @@ class MainActivity : ComponentActivity() {
                             } else {
                                 state.weatherInfo?.let { presentation ->
                                     WeatherCard(
-                                        currentWeatherData = presentation.currentWeatherData
+                                        currentWeather = presentation.currentWeather
                                     )
                                     Spacer(Modifier.height(16.dp))
                                     WeatherForecast(
-                                        weatherDataForToday = presentation.weatherDataPerDayData.getOrElse(
+                                        weatherForToday = presentation.weatherPerDay.getOrElse(
                                             0,
                                             defaultValue = { throw IllegalStateException("Map was empty!") })
                                     )

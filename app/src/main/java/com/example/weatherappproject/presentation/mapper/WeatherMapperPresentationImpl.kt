@@ -1,7 +1,7 @@
 package com.example.weatherappproject.presentation.mapper
 
 import com.example.weatherappproject.data.model.weather.WeatherInfoData
-import com.example.weatherappproject.presentation.model.WeatherDataPresentation
+import com.example.weatherappproject.presentation.model.WeatherPresentation
 import com.example.weatherappproject.presentation.model.WeatherInfoPresentation
 import com.example.weatherappproject.presentation.model.WeatherType.Companion.fromWMO
 import javax.inject.Inject
@@ -11,7 +11,7 @@ class WeatherMapperPresentationImpl @Inject constructor() : WeatherMapperPresent
 
         val weatherDataPerDay = weatherPerDay.mapValues {
             it.value.map { weatherData ->
-                WeatherDataPresentation(
+                WeatherPresentation(
                     weatherData.time,
                     weatherData.temperatureCelsius,
                     weatherData.pressure,
@@ -23,7 +23,7 @@ class WeatherMapperPresentationImpl @Inject constructor() : WeatherMapperPresent
         }
 
         val weatherData = currentWeather?.let {
-            WeatherDataPresentation(
+            WeatherPresentation(
                 it.time,
                 it.temperatureCelsius,
                 it.pressure,

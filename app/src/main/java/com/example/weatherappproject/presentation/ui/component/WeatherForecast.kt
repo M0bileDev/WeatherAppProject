@@ -12,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.weatherappproject.presentation.model.WeatherDataPresentation
+import com.example.weatherappproject.presentation.model.WeatherPresentation
 
 @Composable
 fun WeatherForecast(
     modifier: Modifier = Modifier,
-    weatherDataForToday: List<WeatherDataPresentation>
+    weatherForToday: List<WeatherPresentation>
 ) {
     Column(
         modifier = modifier
@@ -27,12 +27,12 @@ fun WeatherForecast(
         Text(text = "Today", fontSize = 20.sp)
         Spacer(Modifier.height(16.dp))
         LazyRow {
-            items(weatherDataForToday) { presentation ->
+            items(weatherForToday) { presentation ->
                 HourlyWeatherDisplay(
                     modifier = Modifier
                         .height(100.dp)
                         .padding(end = 16.dp),
-                    weatherDataPresentation = presentation
+                    weatherPresentation = presentation
                 )
             }
         }

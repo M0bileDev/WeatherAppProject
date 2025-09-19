@@ -21,16 +21,16 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherappproject.R
-import com.example.weatherappproject.presentation.model.WeatherDataPresentation
+import com.example.weatherappproject.presentation.model.WeatherPresentation
 import com.example.weatherappproject.presentation.ui.dateFormatterHHmm
 
 
 @Composable
 fun WeatherCard(
     modifier: Modifier = Modifier,
-    currentWeatherData: WeatherDataPresentation?
+    currentWeather: WeatherPresentation?
 ) {
-    currentWeatherData?.let { dataPresentation ->
+    currentWeather?.let { dataPresentation ->
         Card(
             modifier = modifier.padding(16.dp),
             shape = RoundedCornerShape(16.dp)
