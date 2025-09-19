@@ -11,4 +11,9 @@
     <string name="percent_unit">%</string>
     <string name="humidity">humidity</string>
     <string name="value_unit">%1$s %2$s</string>
+    <string name="a_request_error_occurred_please_check_internet_connection">A request error occurred. Please check Internet connection</string>
+    <string name="a_location_error_occurred_please_check_permissions">A location error occurred. Please check permissions.</string>
+    <string name="settings">SETTINGS</string>
+    <string name="there_s_no_data_to_display_try_again_later_or_refresh">There\'s no data to display. Try again later or refresh.</string>
+    <string name="refresh">Refresh</string>
 </resources>
