@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,7 +35,7 @@ fun HourlyWeatherDisplay(
         Image(
             modifier = Modifier.size(40.dp),
             painter = painterResource(weatherType.iconRes),
-            contentDescription = weatherType.weatherDesc,
+            contentDescription = stringResource(weatherType.weatherDesc),
         )
         Text(
             text = stringResource(
