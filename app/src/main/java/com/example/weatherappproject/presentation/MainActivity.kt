@@ -32,11 +32,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.weatherappproject.R
 import com.example.weatherappproject.presentation.model.WeatherViewModelAction
 import com.example.weatherappproject.presentation.ui.component.WeatherCard
 import com.example.weatherappproject.presentation.ui.component.WeatherForecast
@@ -82,7 +84,7 @@ class MainActivity : ComponentActivity() {
                                 is WeatherViewModelAction.ApiError -> {
                                     snackbarHostState.currentSnackbarData?.dismiss()
                                     snackbarHostState.showSnackbar(
-                                        "A request error occurred. Please check Internet connection",
+                                        getString(R.string.a_request_error_occurred_please_check_internet_connection),
                                         withDismissAction = true,
                                         duration = SnackbarDuration.Indefinite
                                     )
@@ -91,9 +93,9 @@ class MainActivity : ComponentActivity() {
                                 is WeatherViewModelAction.NoLocationData -> {
                                     snackbarHostState.currentSnackbarData?.dismiss()
                                     snackbarHostState.showSnackbar(
-                                        "A location error occurred. Please check permissions.",
+                                        getString(R.string.a_location_error_occurred_please_check_permissions),
                                         duration = SnackbarDuration.Indefinite,
-                                        actionLabel = "SETTINGS",
+                                        actionLabel = getString(R.string.settings),
                                         withDismissAction = true
                                     ).run {
                                         when (this) {
@@ -123,11 +125,11 @@ class MainActivity : ComponentActivity() {
                             if (state.weatherInfo == null && !state.isLoading) {
                                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                     Column {
-                                        Text("There's no data to display. Try again later.")
+                                        Text(stringResource(R.string.there_s_no_data_to_display_try_again_later_or_refresh))
                                         Button(onClick = {
                                             permissionLauncher.runLocationsPermissions()
                                         }) {
-                                            Text("Refresh")
+                                            Text(stringResource(R.string.refresh))
                                         }
                                     }
                                 }
