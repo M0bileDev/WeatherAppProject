@@ -2,4 +2,12 @@
     <string name="app_name">WeatherAppProject</string>
     <string name="no_data">No data</string>
     <string name="temperature_x_celsius">%1$d°C</string>
+    <string name="today">Today %1$s</string>
+    <string name="weather_illustration">Weather illustration</string>
+    <string name="hpa">hpa</string>
+    <string name="pressure">pressure</string>
+    <string name="km_h">km/h</string>
+    <string name="wind_speed">wind speed</string>
+    <string name="percent_unit">%</string>
+    <string name="humidity">humidity</string>
 </resources>
