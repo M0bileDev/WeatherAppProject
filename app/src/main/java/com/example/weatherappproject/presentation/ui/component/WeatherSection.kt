@@ -4,16 +4,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.weatherappproject.R
 import com.example.weatherappproject.presentation.ui.theme.WeatherAppProjectTheme
 
 @Composable
@@ -31,7 +32,7 @@ fun <T> WeatherSection(
             contentDescription = contentDescription
         )
         Spacer(Modifier.width(8.dp))
-        Text(text = "${value.toString()} $unit")
+        Text(text = stringResource(R.string.value_unit, value.toString(), unit))
     }
 }
 
@@ -41,9 +42,11 @@ private fun WeatherSectionPreview() {
     WeatherAppProjectTheme {
         WeatherSection(
             value = 30,
-            unit = "km/h",
-            contentDescription = "wind speed",
-            icon = Icons.Filled.Delete
+            unit = stringResource(R.string.km_h),
+            contentDescription = stringResource(R.string.wind_speed),
+            icon = ImageVector.vectorResource(
+                R.drawable.ic_wind
+            )
         )
     }
 }
@@ -56,7 +59,9 @@ private fun WeatherSectionPreview2() {
             value = 15.6,
             unit = "km/h",
             contentDescription = "wind speed",
-            icon = Icons.Filled.Delete
+            icon = ImageVector.vectorResource(
+                R.drawable.ic_wind
+            )
         )
     }
 }
