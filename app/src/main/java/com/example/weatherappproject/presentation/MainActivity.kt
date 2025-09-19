@@ -39,6 +39,9 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.weatherappproject.R
+import com.example.weatherappproject.presentation.ext.configPermissionLauncher
+import com.example.weatherappproject.presentation.ext.runLocationsPermissions
+import com.example.weatherappproject.presentation.ext.startApplicationSettings
 import com.example.weatherappproject.presentation.model.WeatherViewModelAction
 import com.example.weatherappproject.presentation.ui.component.WeatherCard
 import com.example.weatherappproject.presentation.ui.component.WeatherForecast
@@ -101,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                         when (this) {
                                             SnackbarResult.Dismissed -> {}
                                             SnackbarResult.ActionPerformed -> {
-                                                startApplicationSettings(activity)
+                                                startApplicationSettings()
                                             }
                                         }
                                     }
@@ -158,39 +161,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    fun ActivityResultLauncher<Array<String>>.runLocationsPermissions() = launch(
-        arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-        )
-    )
-
-    private fun configPermissionLauncher(
-        onSuccess: () -> Unit,
-        onError: () -> Unit
-    ): ActivityResultLauncher<Array<String>> = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val permissionsGranted = permissions.all { it.value }
-        if (permissionsGranted) {
-            onSuccess()
-        } else {
-            onError()
-        }
-    }
-}
-
-private fun startApplicationSettings(
-    activity: Activity
-) = with(activity) {
-    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-        val uri = Uri.fromParts(
-            "package",
-            packageName, null
-        )
-        setData(uri)
-        startActivity(this)
     }
 }
