@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,8 +30,7 @@ import com.example.weatherappproject.presentation.ui.dateFormatterHHmm
 fun WeatherCard(
     modifier: Modifier = Modifier,
     currentWeather: WeatherPresentation?
-) {
-    currentWeather?.let { dataPresentation ->
+) = currentWeather?.let { presentation ->
         Card(
             modifier = modifier.padding(16.dp),
             shape = RoundedCornerShape(16.dp)
@@ -42,57 +42,55 @@ fun WeatherCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                val currentTime = remember(dataPresentation.timeData) {
-                    dataPresentation.timeData.format(
+                val currentTime = remember(presentation.timeData) {
+                    presentation.timeData.format(
                         dateFormatterHHmm
                     )
-                } ?: "No data"
+                } ?: stringResource(R.string.no_data)
 
                 Text(
                     modifier = Modifier.align(Alignment.End),
-                    text = "Today $currentTime"
+                    text = stringResource(R.string.today, currentTime)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Image(
-                    painter = painterResource(dataPresentation.weatherType.iconRes),
-                    contentDescription = "Weather illustration"
+                    painter = painterResource(presentation.weatherType.iconRes),
+                    contentDescription = stringResource(R.string.weather_illustration)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("${dataPresentation.temperatureCelsiusData}°C", fontSize = 50.sp)
+                Text(stringResource(R.string.temperature_x_celsius,presentation.temperatureCelsiusData), fontSize = 50.sp)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(dataPresentation.weatherType.weatherDesc, fontSize = 20.sp)
+                Text(presentation.weatherType.weatherDesc, fontSize = 20.sp)
                 Spacer(modifier = Modifier.height(32.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     WeatherSection(
-                        value = dataPresentation.pressureData,
-                        unit = "hpa",
+                        value = presentation.pressureData,
+                        unit = stringResource(R.string.hpa),
                         icon = ImageVector.vectorResource(
                             R.drawable.ic_pressure
                         ),
-                        contentDescription = "pressure"
+                        contentDescription = stringResource(R.string.pressure)
                     )
                     WeatherSection(
-                        value = dataPresentation.windSpeedData,
-                        unit = "km/h",
+                        value = presentation.windSpeedData,
+                        unit = stringResource(R.string.km_h),
                         icon = ImageVector.vectorResource(
                             R.drawable.ic_wind
                         ),
-                        contentDescription = "wind speed"
+                        contentDescription = stringResource(R.string.wind_speed)
                     )
                     WeatherSection(
-                        value = dataPresentation.humidityData,
-                        unit = "%",
+                        value = presentation.humidityData,
+                        unit = stringResource(R.string.percent_unit),
                         icon = ImageVector.vectorResource(
                             R.drawable.ic_drop
                         ),
-                        contentDescription = "humidity"
+                        contentDescription = stringResource(R.string.humidity)
                     )
                 }
             }
         }
     }
-
-}
