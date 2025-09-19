@@ -10,8 +10,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weatherappproject.R
 import com.example.weatherappproject.presentation.model.WeatherPresentation
 
 @Composable
@@ -24,7 +26,7 @@ fun WeatherForecast(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Text(text = "Today", fontSize = 20.sp)
+        Text(text = stringResource(R.string.today), fontSize = 20.sp)
         Spacer(Modifier.height(16.dp))
         LazyRow {
             items(weatherForToday) { presentation ->
