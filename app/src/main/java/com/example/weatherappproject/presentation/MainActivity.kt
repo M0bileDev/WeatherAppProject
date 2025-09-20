@@ -1,17 +1,10 @@
 package com.example.weatherappproject.presentation
 
-import android.Manifest
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -76,8 +69,6 @@ class MainActivity : ComponentActivity() {
 
                 val state by viewModel.state.collectAsStateWithLifecycle()
                 val lifecycle = LocalLifecycleOwner.current
-                val activity =
-                    LocalActivity.current ?: throw IllegalStateException("Activity was null!")
                 val snackbarHostState = remember { SnackbarHostState() }
 
                 LaunchedEffect(Unit) {
