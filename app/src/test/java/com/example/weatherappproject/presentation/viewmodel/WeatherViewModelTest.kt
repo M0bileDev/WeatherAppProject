@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.example.weatherappproject.presentation.viewmodel
 
 import com.example.weatherappproject.data.location.DefaultLocationTracker
@@ -6,8 +8,14 @@ import com.example.weatherappproject.presentation.mapper.WeatherMapperPresentati
 import com.example.weatherappproject.presentation.model.WeatherViewModelAction
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -64,6 +72,29 @@ class WeatherViewModelTest {
         //then action is NoLocationData
         val action = weatherViewModel.actions.first()
         assertEquals(action, WeatherViewModelAction.NoLocationData)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    @Test
+    fun givenViewModel_whenLocationPermissionHasError_thenActionIsNoLocationData() {
+        val mainThreadSurrogate = newSingleThreadContext("UI thread")
+        Dispatchers.setMain(mainThreadSurrogate)
+
+        //no deadlock between runBlocking and Dispatchers.Main
+        runBlocking(mainThreadSurrogate) {
+            //given viewModel
+
+            //when current location is null
+            weatherViewModel.onLocationPermissionError()
+
+
+            //then action is NoLocationData
+            val action = weatherViewModel.actions.first()
+            assertEquals(action, WeatherViewModelAction.NoLocationData)
+        }
+
+        Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
+        mainThreadSurrogate.close()
     }
 
 }
