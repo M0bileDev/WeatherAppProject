@@ -53,4 +53,17 @@ class WeatherViewModelTest {
         assertEquals(weatherViewModel.state.value.isLoading, false)
     }
 
+    @Test
+    fun givenViewModel_whenLocationIsNull_thenActionIsNoLocationData() = runBlocking {
+        //given viewModel
+
+        //when current location is null
+        coEvery { locationTracker.getCurrentLocation() } returns null
+        weatherViewModel.loadWeatherInfo()
+
+        //then action is NoLocationData
+        val action = weatherViewModel.actions.first()
+        assertEquals(action, WeatherViewModelAction.NoLocationData)
+    }
+
 }
