@@ -1,5 +1,6 @@
 package com.example.weatherappproject.presentation.viewmodel
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherappproject.data.location.DefaultLocationTracker
@@ -28,7 +29,8 @@ class WeatherViewModel @Inject constructor(
     dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
-    private var job: Job? = null
+    var job: Job? = null
+        private set
     private val scope = CoroutineScope(dispatcherProvider.io)
 
     private val _actions = MutableSharedFlow<WeatherViewModelAction>()
@@ -56,16 +58,21 @@ class WeatherViewModel @Inject constructor(
                     when (result) {
                         is Resource.Success -> {
 
-                            val data = result.data
-                                ?: throw IllegalStateException("Success data cannot be null")
-                            val weatherInfo = with(weatherMapperPresentation) {
-                                data.toWeatherDataPresentation()
-                            }
+                            try {
+                                val data = result.data
+                                    ?: throw IllegalStateException("Success data cannot be null")
+                                val weatherInfo = with(weatherMapperPresentation) {
+                                    data.toWeatherDataPresentation()
+                                }
 
-                            _state.value = _state.value.copy(
-                                weatherInfo = weatherInfo,
-                                isLoading = false
-                            )
+                                _state.value = _state.value.copy(
+                                    weatherInfo = weatherInfo,
+                                    isLoading = false
+                                )
+                            } catch (ise: IllegalStateException) {
+                                ise.printStackTrace()
+                                _actions.emit(WeatherViewModelAction.ApiError())
+                            }
                         }
 
                         is Resource.Error -> {
@@ -94,9 +101,10 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
+    @VisibleForTesting()
+    public override fun onCleared() {
         job?.cancel()
+        super.onCleared()
     }
 
 }
