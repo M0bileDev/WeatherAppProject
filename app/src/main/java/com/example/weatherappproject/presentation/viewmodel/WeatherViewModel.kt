@@ -4,13 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherappproject.data.location.DefaultLocationTracker
 import com.example.weatherappproject.data.repository.DefaultWeatherRepository
+import com.example.weatherappproject.framework.dispatcher.DispatcherProvider
 import com.example.weatherappproject.presentation.mapper.WeatherMapperPresentation
 import com.example.weatherappproject.utils.Resource
 import com.example.weatherappproject.presentation.model.WeatherState
 import com.example.weatherappproject.presentation.model.WeatherViewModelAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,11 +24,12 @@ import javax.inject.Inject
 class WeatherViewModel @Inject constructor(
     private val weatherRepository: DefaultWeatherRepository,
     private val locationTracker: DefaultLocationTracker,
-    private val weatherMapperPresentation: WeatherMapperPresentation
+    private val weatherMapperPresentation: WeatherMapperPresentation,
+    dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     private var job: Job? = null
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(dispatcherProvider.io)
 
     private val _actions = MutableSharedFlow<WeatherViewModelAction>()
     val actions = _actions.asSharedFlow()
@@ -43,6 +44,7 @@ class WeatherViewModel @Inject constructor(
             if (!isActive) return@with
 
             job = launch {
+
                 _state.value = _state.value.copy(
                     isLoading = true
                 )
@@ -79,6 +81,7 @@ class WeatherViewModel @Inject constructor(
                         weatherInfo = null,
                         isLoading = false
                     )
+
                     _actions.emit(WeatherViewModelAction.NoLocationData)
                 }
             }
