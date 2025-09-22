@@ -16,10 +16,14 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable.getCancellationException
+import kotlinx.coroutines.NonCancellable.invokeOnCompletion
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -39,6 +43,7 @@ import kotlinx.coroutines.time.delay
 import kotlinx.coroutines.withContext
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Test
 
@@ -185,7 +190,12 @@ class WeatherViewModelTest {
         runTest {
 
             coEvery { locationTracker.getCurrentLocation() } returns LocationData(0.0, 0.0)
-            coEvery { weatherRepository.getWeather(any(), any()) } returns Resource.Error("Error message")
+            coEvery {
+                weatherRepository.getWeather(
+                    any(),
+                    any()
+                )
+            } returns Resource.Error("Error message")
 
             //given viewModel
 
@@ -206,7 +216,12 @@ class WeatherViewModelTest {
                 }
             }
             coEvery { locationTracker.getCurrentLocation() } returns LocationData(0.0, 0.0)
-            coEvery { weatherRepository.getWeather(any(), any()) } returns Resource.Error("Error message")
+            coEvery {
+                weatherRepository.getWeather(
+                    any(),
+                    any()
+                )
+            } returns Resource.Error("Error message")
 
             //given viewModel
 
@@ -216,5 +231,23 @@ class WeatherViewModelTest {
             //then
             assertEquals(WeatherViewModelAction.ApiError(), action)
         }
+
+    @Test
+    fun givenViewModel_whenViewModelIsDestroyed_thenJobIsCancelled() = runTest {
+
+        coEvery { locationTracker.getCurrentLocation() } coAnswers {
+            delay(Long.MAX_VALUE)
+            null
+        }
+
+        //given view model
+
+        //when
+        weatherViewModel.loadWeatherInfo()
+        weatherViewModel.onCleared()
+
+        //then
+        assertEquals(true, weatherViewModel.job?.isCancelled)
+    }
 
 }
