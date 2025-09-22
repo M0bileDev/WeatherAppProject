@@ -196,4 +196,25 @@ class WeatherViewModelTest {
             assertEquals(false, weatherViewModel.state.value.isLoading)
         }
 
+    @Test
+    fun givenViewModel_whenLocationIsAvailableAndResultIsError_thenActionIsApiError() =
+        runTest {
+            lateinit var action: WeatherViewModelAction
+            val job: Job = launch(UnconfinedTestDispatcher()) {
+                weatherViewModel.actions.collect {
+                    action = it
+                }
+            }
+            coEvery { locationTracker.getCurrentLocation() } returns LocationData(0.0, 0.0)
+            coEvery { weatherRepository.getWeather(any(), any()) } returns Resource.Error("Error message")
+
+            //given viewModel
+
+            //when current location is null
+            weatherViewModel.loadWeatherInfo().run { job.cancel() }
+
+            //then
+            assertEquals(WeatherViewModelAction.ApiError(), action)
+        }
+
 }
