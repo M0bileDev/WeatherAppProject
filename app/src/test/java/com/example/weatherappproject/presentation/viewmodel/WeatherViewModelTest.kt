@@ -250,4 +250,33 @@ class WeatherViewModelTest {
         assertEquals(true, weatherViewModel.job?.isCancelled)
     }
 
+    @Test
+    fun givenViewModel_whenResultSuccessDataIsNull_thenActionIsApiError() =
+        runTest {
+            lateinit var action: WeatherViewModelAction
+            val job: Job = launch(UnconfinedTestDispatcher()) {
+                weatherViewModel.actions.collect {
+                    action = it
+                }
+            }
+
+            coEvery { locationTracker.getCurrentLocation() } returns LocationData(0.0, 0.0)
+            coEvery { weatherRepository.getWeather(any(), any()) } returns Resource.Success(
+                null
+            )
+            every { weatherMapperPresentation.run { any<WeatherInfoData>().toWeatherDataPresentation() } } returns WeatherInfoPresentation(
+                emptyMap(),
+                null
+            )
+
+            //given viewModel
+
+            //when current location is null
+            weatherViewModel.loadWeatherInfo().run { job.cancel() }
+
+            //then
+            assertEquals(WeatherViewModelAction.ApiError(), action)
+
+        }
+
 }
