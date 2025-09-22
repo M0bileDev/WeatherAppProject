@@ -2,20 +2,42 @@
 
 package com.example.weatherappproject.presentation.viewmodel
 
+import android.media.midi.MidiSender
 import com.example.weatherappproject.data.location.DefaultLocationTracker
+import com.example.weatherappproject.data.location.LocationData
+import com.example.weatherappproject.data.model.weather.WeatherInfoData
 import com.example.weatherappproject.data.repository.DefaultWeatherRepository
+import com.example.weatherappproject.framework.dispatcher.DispatcherProvider
 import com.example.weatherappproject.presentation.mapper.WeatherMapperPresentation
+import com.example.weatherappproject.presentation.model.WeatherInfoPresentation
 import com.example.weatherappproject.presentation.model.WeatherViewModelAction
+import com.example.weatherappproject.utils.Resource
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.time.delay
+import kotlinx.coroutines.withContext
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -33,46 +55,62 @@ class WeatherViewModelTest {
         weatherViewModel = WeatherViewModel(
             weatherRepository,
             locationTracker,
-            weatherMapperPresentation
+            weatherMapperPresentation,
+            object : DispatcherProvider {
+                override val io: CoroutineDispatcher = UnconfinedTestDispatcher()
+                override val main: CoroutineDispatcher = UnconfinedTestDispatcher()
+                override val default: CoroutineDispatcher = UnconfinedTestDispatcher()
+            }
         )
     }
 
+
     @Test
-    fun givenViewModel_whenLocationIsNull_thenWeatherInfoStateIsNull() {
+    fun givenViewModel_whenLocationIsNull_thenWeatherInfoStateIsNull() = runTest {
+        coEvery { locationTracker.getCurrentLocation() } returns null
+
         //given viewModel
 
         //when current location is null
-        coEvery { locationTracker.getCurrentLocation() } returns null
         weatherViewModel.loadWeatherInfo()
 
         //then
-        assertEquals(weatherViewModel.state.value.weatherInfo, null)
+        assertEquals(null, weatherViewModel.state.value.weatherInfo)
     }
 
     @Test
-    fun givenViewModel_whenLocationIsNull_thenLoadingStateIsFalse() {
+    fun givenViewModel_whenLocationIsNull_thenLoadingStateIsFalse() = runTest {
+        coEvery { locationTracker.getCurrentLocation() } returns null
+
         //given viewModel
 
         //when current location is null
-        coEvery { locationTracker.getCurrentLocation() } returns null
         weatherViewModel.loadWeatherInfo()
 
         //then
-        assertEquals(weatherViewModel.state.value.isLoading, false)
+        assertEquals(false, weatherViewModel.state.value.isLoading)
     }
 
     @Test
-    fun givenViewModel_whenLocationIsNull_thenActionIsNoLocationData() = runBlocking {
+    fun givenViewModel_whenLocationIsNull_thenActionIsNoLocationData() = runTest {
+        lateinit var action: WeatherViewModelAction
+        val job: Job = launch(UnconfinedTestDispatcher()) {
+            weatherViewModel.actions.collect {
+                action = it
+            }
+        }
+        coEvery { locationTracker.getCurrentLocation() } returns null
+
+
         //given viewModel
 
         //when current location is null
-        coEvery { locationTracker.getCurrentLocation() } returns null
-        weatherViewModel.loadWeatherInfo()
+        weatherViewModel.loadWeatherInfo().run { job.cancel() }
 
-        //then action is NoLocationData
-        val action = weatherViewModel.actions.first()
-        assertEquals(action, WeatherViewModelAction.NoLocationData)
+        //then
+        assertEquals(WeatherViewModelAction.NoLocationData, action)
     }
+
 
     @OptIn(DelicateCoroutinesApi::class)
     @Test
@@ -87,14 +125,38 @@ class WeatherViewModelTest {
             //when current location is null
             weatherViewModel.onLocationPermissionError()
 
-
             //then action is NoLocationData
             val action = weatherViewModel.actions.first()
-            assertEquals(action, WeatherViewModelAction.NoLocationData)
+            assertEquals(WeatherViewModelAction.NoLocationData, action)
         }
 
         Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
         mainThreadSurrogate.close()
     }
+
+    @Test
+    fun givenViewModel_whenLocationIsAvailableAndResultIsSuccess_thenWeatherInfoIsPresent() =
+        runTest {
+            val presentation = WeatherInfoPresentation(
+                emptyMap(),
+                null
+            )
+            coEvery { locationTracker.getCurrentLocation() } returns LocationData(0.0, 0.0)
+            coEvery { weatherRepository.getWeather(any(), any()) } returns Resource.Success(
+                WeatherInfoData(emptyMap(), null)
+            )
+            every { weatherMapperPresentation.run { any<WeatherInfoData>().toWeatherDataPresentation() } } returns WeatherInfoPresentation(
+                emptyMap(),
+                null
+            )
+
+            //given viewModel
+
+            //when current location is null
+            weatherViewModel.loadWeatherInfo()
+
+            //then
+            assertEquals(presentation, weatherViewModel.state.value.weatherInfo)
+        }
 
 }
