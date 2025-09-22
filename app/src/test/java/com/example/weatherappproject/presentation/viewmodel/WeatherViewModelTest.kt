@@ -179,4 +179,21 @@ class WeatherViewModelTest {
             //then
             assertEquals(null, weatherViewModel.state.value.weatherInfo)
         }
+
+    @Test
+    fun givenViewModel_whenLocationIsAvailableAndResultIsError_thenLoadingIsFalse() =
+        runTest {
+
+            coEvery { locationTracker.getCurrentLocation() } returns LocationData(0.0, 0.0)
+            coEvery { weatherRepository.getWeather(any(), any()) } returns Resource.Error("Error message")
+
+            //given viewModel
+
+            //when current location is null
+            weatherViewModel.loadWeatherInfo()
+
+            //then
+            assertEquals(false, weatherViewModel.state.value.isLoading)
+        }
+
 }
