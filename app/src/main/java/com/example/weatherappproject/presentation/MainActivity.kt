@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                 val lifecycle = LocalLifecycleOwner.current
                 val snackbarHostState = remember { SnackbarHostState() }
 
-                LaunchedEffect(Unit) {
+                LaunchedEffect(lifecycle) {
                     lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                         viewModel.actions.collectLatest { action ->
                             when (action) {
